@@ -1,7 +1,7 @@
 package main
 
 import "fmt"
-import "hello_05/tools"
+import "hello_06/tools"
 
 func main() {
 	var x = tools.Sum(2, 3)

@@ -1,4 +1,4 @@
-module hello_05
+module hello_06
 
 go 1.14
 
