@@ -1,3 +1,7 @@
+练习目标
+=======
+文件分离代码
+
 参考资料
 https://golangbot.com/go-packages/
 

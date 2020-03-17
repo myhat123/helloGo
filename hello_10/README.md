@@ -1,10 +1,13 @@
+练习目标
+=======
+go工作池
+
 参考资料
 
 https://golangbot.com/buffered-channels-worker-pools/
 https://studygolang.com/articles/12512
 
 WaitGroup
-=========
 
 WaitGroup 用于等待一批 Go 协程执行结束。程序控制会一直阻塞，直到这些协程全部执行完毕。
 

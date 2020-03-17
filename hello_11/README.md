@@ -1,3 +1,7 @@
+练习目标
+=======
+go并发作业模式
+
 参考资料
 
 https://golangbot.com/buffered-channels-worker-pools/

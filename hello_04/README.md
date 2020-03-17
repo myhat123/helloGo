@@ -1,3 +1,7 @@
+练习目标
+=======
+go模块机制及包机制分离代码
+
 代码进一步分离
 
 https://golangbot.com/go-packages/

@@ -1,4 +1,6 @@
-函数分离
+练习目标
+=======
+函数分离代码
 
 参考资料 
 https://golangbot.com/functions/

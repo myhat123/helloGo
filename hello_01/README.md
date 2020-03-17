@@ -1,3 +1,7 @@
+练习目标
+=======
+go环境及第一个示例
+
 参考资料：
 
 https://golang.google.cn/doc/install
