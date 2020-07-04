@@ -4,7 +4,7 @@ go并发作业模式
 
 参考资料
 
-https://golangbot.com/buffered-channels-worker-pools/
+https://golangbot.com/buffered-channels-worker-pools/  
 https://studygolang.com/articles/12512
 
 以下示例是金融网点运营监控系统的导入cassandra代码的核心
@@ -26,56 +26,66 @@ https://studygolang.com/articles/12512
 
 我们工作池的核心功能如下：
 
-    创建一个 Go 协程池，监听一个等待作业分配的输入型缓冲信道。
-    将作业添加到该输入型缓冲信道中。
-    作业完成后，再将结果写入一个输出型缓冲信道。
-    从输出型缓冲信道读取并打印结果。
+    创建一个 Go 协程池，监听一个等待作业分配的输入型缓冲信道。  
+    将作业添加到该输入型缓冲信道中。  
+    作业完成后，再将结果写入一个输出型缓冲信道。  
+    从输出型缓冲信道读取并打印结果。  
 
 定义两个 struct: 1) Job , 2) Result
 
-    type Job struct {  
-        id       int
-        randomno int
-    }
-    type Result struct {  
-        job         Job
-        sumofdigits int
-    }
+```go
+type Job struct {  
+    id       int
+    randomno int
+}
+type Result struct {  
+    job         Job
+    sumofdigits int
+}
+```
 
 两个缓冲信道
 
-    var jobs = make(chan Job, 10)  
-    var results = make(chan Result, 10)
+```go
+var jobs = make(chan Job, 10)  
+var results = make(chan Result, 10)
+```
 
 工作协程的函数 worker
 
-    func worker(wg *sync.WaitGroup) {  
-        for job := range jobs {
-            output := Result{job, digits(job.randomno)}
-            results <- output
-        }
-        wg.Done()
+```go
+func worker(wg *sync.WaitGroup) {  
+    for job := range jobs {
+        output := Result{job, digits(job.randomno)}
+        results <- output
     }
+    wg.Done()
+}
+```
 
 创建一个 Go 协程的工作池
 
-    func createWorkerPool(noOfWorkers int) {  
-        var wg sync.WaitGroup
-        for i := 0; i < noOfWorkers; i++ {
-            wg.Add(1)
-            go worker(&wg)
-        }
-        wg.Wait()
-        close(results)
+```go
+func createWorkerPool(noOfWorkers int) {  
+    var wg sync.WaitGroup
+    for i := 0; i < noOfWorkers; i++ {
+        wg.Add(1)
+        go worker(&wg)
     }
+    wg.Wait()
+    close(results)
+}
+```
 
 把作业分配给工作者
 
-    func allocate(noOfJobs int) {  
-        for i := 0; i < noOfJobs; i++ {
-            randomno := rand.Intn(999)
-            job := Job{i, randomno}
-            jobs <- job
-        }
-        close(jobs)
+```go
+func allocate(noOfJobs int) {  
+    for i := 0; i < noOfJobs; i++ {
+        randomno := rand.Intn(999)
+        job := Job{i, randomno}
+        jobs <- job
     }
+    close(jobs)
+}
+```
