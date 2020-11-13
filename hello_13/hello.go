@@ -13,6 +13,7 @@ import (
 	_ "github.com/ClickHouse/clickhouse-go"
 	"github.com/jackc/pgtype"
 	"github.com/jackc/pgx/v4"
+	"github.com/jackc/pgx/v4/pgxpool"
 	"github.com/shopspring/decimal"
 
 	shopspring "github.com/jackc/pgtype/ext/shopspring-numeric"
@@ -122,17 +123,31 @@ func Start(connect *sql.DB, data []*DBrchQryDtl) {
 }
 
 func main() {
-	conn, err := pgx.Connect(context.Background(), "postgresql://jxyz:1234@localhost/jr")
+
+	config, err := pgxpool.ParseConfig("postgresql://jxyz:1234@localhost/jr")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	config.AfterConnect = func(ctx context.Context, conn *pgx.Conn) error {
+		// do something with every new connection
+		conn.ConnInfo().RegisterDataType(pgtype.DataType{
+			Value: &shopspring.Numeric{},
+			Name:  "numeric",
+			OID:   pgtype.NumericOID,
+		})
+
+		return nil
+	}
+
+	dbpool, err := pgxpool.ConnectConfig(context.Background(), config)
+
 	if err != nil {
 		log.Fatal("Unable to connect to database", err)
 	}
-	defer conn.Close(context.Background())
+	// defer conn.Close(context.Background())
 
-	conn.ConnInfo().RegisterDataType(pgtype.DataType{
-		Value: &shopspring.Numeric{},
-		Name:  "numeric",
-		OID:   pgtype.NumericOID,
-	})
+	defer dbpool.Close()
 
 	connect, _ := sql.Open("clickhouse", "tcp://127.0.0.1:9000?username=hzg&password=1234&database=finance&debug=true")
 
@@ -151,7 +166,7 @@ func main() {
 
 	// fmt.Println(acc, amt)
 
-	rows, _ := conn.Query(context.Background(), `
+	rows, _ := dbpool.Query(context.Background(), `
 		select acc, tran_date, amt, dr_cr_flag, rpt_sum, timestamp1 from brch_qry_dtl
 	`)
 
