@@ -3,10 +3,9 @@ package db
 import (
 	"context"
 	"database/sql"
-	"fmt"
+	// "fmt"
 	"log"
 
-	_ "github.com/ClickHouse/clickhouse-go"
 	"github.com/jackc/pgx/v4/pgxpool"
 
 	"hello_14/comm"
@@ -39,9 +38,9 @@ func GetBrchQryDtl(dbpool *pgxpool.Pool, connect *sql.DB) {
 		i = i + 1
 	}
 
-	for _, t := range records {
-		fmt.Println(*t)
-	}
+	// for _, t := range records {
+	// 	fmt.Println(*t)
+	// }
 
 	tasks.Start(connect, records)
 }

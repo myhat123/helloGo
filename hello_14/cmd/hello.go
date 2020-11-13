@@ -9,4 +9,7 @@ func main() {
 	connect := db.GetCH()
 
 	db.GetBrchQryDtl(dbpool, connect)
+
+	defer dbpool.Close()
+	defer connect.Close()
 }

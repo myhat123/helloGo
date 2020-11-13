@@ -15,7 +15,7 @@ import (
 )
 
 var PGURL = "postgresql://jxyz:1234@localhost/jr"
-var CHURL = "tcp://127.0.0.1:9000?username=hzg&password=1234&database=finance&debug=true"
+var CHURL = "tcp://127.0.0.1:9000?username=hzg&password=1234&database=finance"
 
 func GetPG() *pgxpool.Pool {
 	config, err := pgxpool.ParseConfig(PGURL)
@@ -39,9 +39,8 @@ func GetPG() *pgxpool.Pool {
 	if err != nil {
 		log.Fatal("Unable to connect to database", err)
 	}
-	// defer conn.Close(context.Background())
 
-	defer dbpool.Close()
+	// defer dbpool.Close()
 
 	return dbpool
 }
