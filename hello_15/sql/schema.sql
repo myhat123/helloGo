@@ -1,5 +1,7 @@
 CREATE DATABASE IF NOT EXISTS finance;
 
+-- 表引擎 Memory 重启后原数据消失
+
 CREATE TABLE finance.brch_qry_dtl (
     acc String,
     tran_date Date,
@@ -9,6 +11,8 @@ CREATE TABLE finance.brch_qry_dtl (
     timestamp1 String
 ) ENGINE = Memory;
 
+--分区建表 表引擎 MergeTree
+
 CREATE TABLE finance.brch_qry_dtl (
     tran_date Date,
     timestamp1 String,
@@ -17,5 +21,9 @@ CREATE TABLE finance.brch_qry_dtl (
     dr_cr_flag Int,
     rpt_sum String
 ) ENGINE = MergeTree
-PARTITION BY acc
-ORDER BY (tran_date, timestamp1);
+PARTITION BY toYYYYMM(tran_date)
+ORDER BY (acc, timestamp1);
+
+--查看分区情况
+
+select * from system.parts where table='brch_qry_dtl';
