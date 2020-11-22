@@ -2,23 +2,14 @@ package main
 
 import (
 	// "database/sql"
-	"fmt"
 	"log"
-	"time"
 
 	_ "github.com/jackc/pgx/stdlib"
 	"github.com/jmoiron/sqlx"
-	// _ "github.com/lib/pq"
-)
 
-type DBrchQryDtl struct {
-	Acc        string
-	TranDate   time.Time `db:"tran_date"`
-	Amt        string
-	DrCrFlag   int    `db:"dr_cr_flag"`
-	RptSum     string `db:"rpt_sum"`
-	Timestamp1 string
-}
+	"hello_17/common"
+	"hello_17/tasks"
+)
 
 func main() {
 	// this Pings the database trying to connect, panics on error
@@ -28,13 +19,22 @@ func main() {
 		log.Fatalln(err)
 	}
 
-	d := DBrchQryDtl{}
 	rows, err := db.Queryx("SELECT * FROM brch_qry_dtl")
+
+	records := make([]*common.DBrchQryDtl, 0)
+	i := 0
 	for rows.Next() {
+		d := new(common.DBrchQryDtl)
+
 		err := rows.StructScan(&d)
 		if err != nil {
 			log.Fatalln(err)
 		}
-		fmt.Printf("%#v\n", d)
+
+		records = append(records, d)
+
+		i = i + 1
 	}
+
+	tasks.Start(db, records)
 }
