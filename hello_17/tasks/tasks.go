@@ -51,7 +51,7 @@ func createWorkerPool(noOfWorkers int) {
 
 	p, _ := ants.NewPoolWithFunc(noOfWorkers, func(job interface{}) {
 		if j, ok := job.(Job); ok {
-			writeCH(j.db, j.data)
+			writePG(j.db, j.data)
 		}
 		wg.Done()
 	})

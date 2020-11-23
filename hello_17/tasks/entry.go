@@ -7,10 +7,10 @@ import (
 )
 
 //写入数据至postgres
-func writeCH(connect *sqlx.DB, data interface{}) {
+func writePG(db *sqlx.DB, data interface{}) {
 
-	if qrydtl, ok := data.([]*common.DBrchQryDtl); ok {
-		insAction(connect, qrydtl)
+	switch v := data.(type) {
+	case []*common.DBrchQryDtl:
+		insAction(db, v)
 	}
-
 }
