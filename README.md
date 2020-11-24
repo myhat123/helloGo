@@ -36,4 +36,5 @@ hello_14  分离hello_13示例代码
 hello_15  使用反射机制、共享包、共享接口改进代码  
 hello_16  使用ants包goroutine池(还需要验证)
 
-hello_17  使用sqlx
+hello_17  使用sqlx  
+hello_18  使用go-clickhouse解决decimal
