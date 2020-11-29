@@ -14,7 +14,7 @@ func GetBrchQryDtl() {
 	dbpool := GetPG()
 	connect := GetCH()
 
-	defer dbpool.Close()
+	defer dbpool.Close(context.Background())
 	defer connect.Close()
 
 	rows, _ := dbpool.Query(context.Background(), `
@@ -31,7 +31,7 @@ func GetBrchQryDtl() {
 			log.Fatal("Scan failed", err)
 		}
 
-		if i > 0 && i%(100*10000) == 0 {
+		if i > 0 && i%(1000) == 0 {
 			tasks.Start(connect, records)
 			records = make([]*common.DBrchQryDtl, 0)
 		}

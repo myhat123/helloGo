@@ -16,7 +16,7 @@ type Job struct {
 	data    interface{}
 }
 
-var jobs = make(chan Job, 100)
+var jobs chan Job
 
 func allocate(connect *sql.DB, data interface{}, page int) {
 	v := reflect.ValueOf(data)
@@ -51,6 +51,7 @@ func createWorkerPool(noOfWorkers int) {
 
 	p, _ := ants.NewPoolWithFunc(noOfWorkers, func(job interface{}) {
 		if j, ok := job.(Job); ok {
+			// fmt.Println("job: ", j.id)
 			writeCH(j.connect, j.data)
 		}
 		wg.Done()
@@ -66,7 +67,8 @@ func createWorkerPool(noOfWorkers int) {
 }
 
 func Start(connect *sql.DB, data interface{}) {
-	go allocate(connect, data, 200)
+	go allocate(connect, data, 20)
+	jobs = make(chan Job, 5)
 	noOfWorkers := 10
 	createWorkerPool(noOfWorkers)
 }
