@@ -1,7 +1,6 @@
 package tasks
 
 import (
-	"database/sql"
 	"fmt"
 	"math"
 	"reflect"
@@ -11,33 +10,32 @@ import (
 )
 
 type Job struct {
-	id      int
-	connect *sql.DB
-	data    interface{}
+	id   int
+	data interface{}
 }
 
 var jobs chan Job
 
-func allocate(connect *sql.DB, data interface{}, page int) {
+func allocate(data interface{}, page int) {
 	v := reflect.ValueOf(data)
 
 	if v.Kind() == reflect.Slice {
 		total := v.Len()
 
 		if total <= page {
-			job := Job{0, connect, v.Slice(0, total).Interface()}
+			job := Job{0, v.Slice(0, total).Interface()}
 			jobs <- job
 		} else {
 			i := 0
 			for ; i < total/page; i++ {
-				job := Job{i, connect, v.Slice(i*page, (i+1)*page).Interface()}
+				job := Job{i, v.Slice(i*page, (i+1)*page).Interface()}
 				jobs <- job
 			}
 
 			k := float64(total) / float64(page)
 			noOfJobs := int(math.Ceil(k))
 			if noOfJobs > total/page {
-				job := Job{i, connect, v.Slice((i * page), total).Interface()}
+				job := Job{i, v.Slice((i * page), total).Interface()}
 				jobs <- job
 			}
 		}
@@ -52,7 +50,7 @@ func createWorkerPool(noOfWorkers int) {
 	p, _ := ants.NewPoolWithFunc(noOfWorkers, func(job interface{}) {
 		if j, ok := job.(Job); ok {
 			// fmt.Println("job: ", j.id)
-			writeCH(j.connect, j.data)
+			writeCH(j.data)
 		}
 		wg.Done()
 	})
@@ -66,9 +64,13 @@ func createWorkerPool(noOfWorkers int) {
 	fmt.Printf("running goroutines: %d\n", p.Running())
 }
 
-func Start(connect *sql.DB, data interface{}) {
-	go allocate(connect, data, 20)
+func InitChan() {
 	jobs = make(chan Job, 5)
+}
+
+func Start(data interface{}) {
+	go allocate(data, 20)
+
 	noOfWorkers := 10
 	createWorkerPool(noOfWorkers)
 }

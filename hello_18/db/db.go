@@ -2,7 +2,6 @@ package db
 
 import (
 	"context"
-	"database/sql"
 	"log"
 
 	_ "github.com/mailru/go-clickhouse"
@@ -11,15 +10,12 @@ import (
 	"github.com/jackc/pgx/v4"
 
 	shopspring "github.com/jackc/pgtype/ext/shopspring-numeric"
+
+	"hello_18/common"
 )
 
-var PGURL = "postgresql://jxyz:1234@localhost/jr"
-
-// var CHURL = "tcp://127.0.0.1:9000?username=hzg&password=1234&database=finance"
-var CHURL = "http://hzg:1234@localhost:8123/finance"
-
 func GetPG() *pgx.Conn {
-	config, err := pgx.ParseConfig(PGURL)
+	config, err := pgx.ParseConfig(common.PGURL)
 
 	if err != nil {
 		log.Fatal(err)
@@ -38,10 +34,4 @@ func GetPG() *pgx.Conn {
 	})
 
 	return conn
-}
-
-func GetCH() *sql.DB {
-	connect, _ := sql.Open("clickhouse", CHURL)
-
-	return connect
 }

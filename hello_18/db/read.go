@@ -12,10 +12,8 @@ import (
 func GetBrchQryDtl() {
 
 	dbpool := GetPG()
-	connect := GetCH()
 
 	defer dbpool.Close(context.Background())
-	defer connect.Close()
 
 	rows, _ := dbpool.Query(context.Background(), `
 		select acc, tran_date, amt, dr_cr_flag, rpt_sum, timestamp1 from brch_qry_dtl
@@ -32,7 +30,8 @@ func GetBrchQryDtl() {
 		}
 
 		if i > 0 && i%(1000) == 0 {
-			tasks.Start(connect, records)
+			tasks.InitChan()
+			tasks.Start(records)
 			records = make([]*common.DBrchQryDtl, 0)
 		}
 
@@ -44,6 +43,6 @@ func GetBrchQryDtl() {
 	// for _, t := range records {
 	// 	fmt.Println(*t)
 	// }
-
-	tasks.Start(connect, records)
+	tasks.InitChan()
+	tasks.Start(records)
 }

@@ -37,6 +37,8 @@ https://github.com/panjf2000/ants/blob/master/README_ZH.md
 
 简化原有tasks.go的处理
 
+ants，通过本例子，可以通过验证。
+
 采用go-clickhouse
 =================
 
@@ -45,3 +47,5 @@ https://github.com/mailru/go-clickhouse
 因官方的clickhouse-go，对decimal类型支持还没有完成，所以选择go-clickhouse包来解决decimal类型  
 
 只需要使用转字符串后写入，即可。
+
+因为go-clickhouse，共享一个连接后的并发，存在问题，所以采用多连接方式并发。

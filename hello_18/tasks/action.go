@@ -1,13 +1,17 @@
 package tasks
 
 import (
-	"database/sql"
 	"log"
 
 	"hello_18/common"
 )
 
-func insAction(connect *sql.DB, records []*common.DBrchQryDtl) {
+func insAction(records []*common.DBrchQryDtl) {
+
+	connect := GetCH()
+
+	defer connect.Close()
+
 	tx, _ := connect.Begin()
 	stmt, _ := tx.Prepare(`
 		INSERT INTO brch_qry_dtl (tran_date, timestamp1, acc, amt, dr_cr_flag, rpt_sum) 
