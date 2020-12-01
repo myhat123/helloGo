@@ -32,6 +32,7 @@ func GetBrchQryDtl() {
 		}
 
 		if i > 0 && i%(100*10000) == 0 {
+			tasks.InitChan()
 			tasks.Start(connect, records)
 			records = make([]*common.DBrchQryDtl, 0)
 		}
@@ -45,5 +46,6 @@ func GetBrchQryDtl() {
 	// 	fmt.Println(*t)
 	// }
 
+	tasks.InitChan()
 	tasks.Start(connect, records)
 }

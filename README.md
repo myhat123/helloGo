@@ -34,7 +34,7 @@ hello_12  go面向对象方式练习理财存量计算示例
 hello_13  使用pgx和clickhouse-go的示例  
 hello_14  分离hello_13示例代码  
 hello_15  使用反射机制、共享包、共享接口改进代码  
-hello_16  使用ants包goroutine池(还需要验证)
+hello_16  使用ants包goroutine池
 
 hello_17  使用sqlx  
 hello_18  使用go-clickhouse解决decimal

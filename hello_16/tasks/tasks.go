@@ -16,7 +16,7 @@ type Job struct {
 	data    interface{}
 }
 
-var jobs = make(chan Job, 100)
+var jobs chan Job
 
 func allocate(connect *sql.DB, data interface{}, page int) {
 	v := reflect.ValueOf(data)
@@ -63,6 +63,10 @@ func createWorkerPool(noOfWorkers int) {
 
 	wg.Wait()
 	fmt.Printf("running goroutines: %d\n", p.Running())
+}
+
+func InitChan() {
+	jobs = make(chan Job, 10)
 }
 
 func Start(connect *sql.DB, data interface{}) {

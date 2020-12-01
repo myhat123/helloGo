@@ -36,3 +36,12 @@ goroutine池
 https://github.com/panjf2000/ants/blob/master/README_ZH.md
 
 简化原有tasks.go的处理
+
+共享连接
+=======
+tasks.go中createWorkerPool
+
+并发共享clickhouse connect, 保留这个版本, 与hello_18做比较。
+尽管这个版本，存在数据丢失的情况。
+
+hello_18是并发时，单独发起连接，数据验证后是完整的。
