@@ -38,3 +38,5 @@ hello_16  使用ants包goroutine池
 
 hello_17  使用sqlx  
 hello_18  使用go-clickhouse解决decimal
+
+hello_19  fernet示例
